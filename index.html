@@ -1769,7 +1769,7 @@
 
   document.getElementById('title-picker').addEventListener('input', function() {
     var c = this.value;
-    document.querySelectorAll('.title, .dashboard-video-title, .side-video-options h2, .all-link-wrapper-main-heading').forEach(function(el) {
+    document.querySelectorAll('.title, .dashboard-video-title, .side-video-options h2, .all-link-wrapper-main-heading, .three-dot-menu').forEach(function(el) {
       el.style.color = c;
     });
     document.getElementById('title-hex').textContent = c;

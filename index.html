@@ -1783,7 +1783,7 @@
       styleEl.id = 'category-color-style';
       document.head.appendChild(styleEl);
     }
-    styleEl.textContent = '.video-card-info-hider > div, .video-card-info-hider > div span, .side-video-options > div[style*="Gray-iron"], .side-video-options > div[style*="Gray-iron"] span { color: ' + c + ' !important; }';
+    styleEl.textContent = '.video-card-info-hider > div:last-child, .video-card-info-hider > div:last-child span { color: ' + c + ' !important; }';
     document.getElementById('category-hex').textContent = c;
   });
 </script>

@@ -84,6 +84,7 @@
  <a href=https://platform.teachingchannel.com/Dashboard class="dash-header-section-menu active" id=home_menu>Home</a>
  <a href=https://platform.teachingchannel.com/TeachingChannel/PlaylistsPage class=dash-header-section-menu id=playlist_menu>Playlists</a>
  <a href="https://platform.teachingchannel.com/TeachingChannel/PlaylistDetailItems/0?type=myFavorite&amp;isFavorite=True" class=dash-header-section-menu id=favorites_menu>Favorites</a>
+ <button id="inverted-btn" onclick="toggleInverted(this)" style="color:#C5A7D5;font-family:'Avenir Medium','Avenir','Segoe UI','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:22px;font-weight:700;background:none;border:none;cursor:pointer;padding:0;margin-left:1em;">Inverted</button>
  </div>
  <div class="align-items-center header_menu_box d-none d-xl-block">
  <div class="mr-2 ml-4">
@@ -1738,7 +1739,7 @@
     </div>
   </div>
   <div style="margin-top:16px;">
-    <div style="color:#A0A0AB;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">Video Hover Shadow &amp; Zoom</div>
+    <div style="color:#A0A0AB;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">Video Card Shadow</div>
     <div style="display:flex;align-items:center;gap:12px;">
       <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
         <div id="shadow-toggle" onclick="toggleShadow(this)" style="width:44px;height:24px;background:#C5A7D5;border-radius:12px;position:relative;cursor:pointer;transition:background 0.2s;">
@@ -1815,6 +1816,25 @@
     styleEl.textContent = '.video-card-info-hider > div:last-child, .video-card-info-hider > div:last-child span, .side-video-options ~ div, .side-video-options ~ div span { color: ' + c + ' !important; }';
     document.getElementById('category-hex').textContent = c;
   });
+
+  function toggleInverted(btn) {
+    var active = btn.getAttribute('data-active') === '1';
+    if (active) {
+      btn.setAttribute('data-active', '0');
+      btn.style.background = 'none';
+      btn.style.color = '#C5A7D5';
+      btn.style.borderRadius = '';
+      btn.style.padding = '0';
+      btn.style.border = 'none';
+    } else {
+      btn.setAttribute('data-active', '1');
+      btn.style.background = '#ffffff';
+      btn.style.color = '#310a42';
+      btn.style.borderRadius = '12px';
+      btn.style.padding = '4px 18px';
+      btn.style.border = 'none';
+    }
+  }
 
   function toggleShadow(toggle) {
     var knob = document.getElementById('shadow-knob');

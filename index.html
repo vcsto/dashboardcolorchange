@@ -1717,8 +1717,11 @@
     </div>
   </div>
   <div style="margin-top:16px;">
-    <div style="color:#A0A0AB;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">Video Title</div>
-    <input id="title-input" type="text" placeholder="Enter new title..." oninput="var el=document.querySelector('.video-wrapper .title');if(el)el.textContent=this.value;" style="width:100%;background:#2e1040;border:1px solid #C5A7D5;border-radius:8px;padding:8px 12px;color:#fff;font-family:Inter,sans-serif;font-size:14px;box-sizing:border-box;outline:none;">
+    <div style="color:#A0A0AB;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">Video Titles</div>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <input type="color" id="title-picker" value="#ffffff" style="width:44px;height:44px;border:2px solid #C5A7D5;border-radius:10px;cursor:pointer;padding:2px;background:none;">
+      <span id="title-hex" style="color:#fff;font-size:13px;font-family:monospace;">#ffffff</span>
+    </div>
   </div>
 </div>
 <script>
@@ -1755,5 +1758,13 @@
     var dash = document.querySelector('.dash-header-section');
     if (dash) dash.style.backgroundColor = c;
     document.getElementById('header-hex').textContent = c;
+  });
+
+  document.getElementById('title-picker').addEventListener('input', function() {
+    var c = this.value;
+    document.querySelectorAll('.title, .dashboard-video-title, .side-video-options h2, .all-link-wrapper-main-heading').forEach(function(el) {
+      el.style.color = c;
+    });
+    document.getElementById('title-hex').textContent = c;
   });
 </script>

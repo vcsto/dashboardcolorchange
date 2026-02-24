@@ -1730,6 +1730,13 @@
       <span id="category-hex" style="color:#fff;font-size:13px;font-family:monospace;">#a0a0ab</span>
     </div>
   </div>
+  <div style="margin-top:16px;">
+    <div style="color:#A0A0AB;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">View All / See All Links</div>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <input type="color" id="viewall-picker" value="#ffffff" style="width:44px;height:44px;border:2px solid #C5A7D5;border-radius:10px;cursor:pointer;padding:2px;background:none;">
+      <span id="viewall-hex" style="color:#fff;font-size:13px;font-family:monospace;">#ffffff</span>
+    </div>
+  </div>
 </div>
 <script>
   function restoreVideo() {
@@ -1773,6 +1780,17 @@
       el.style.color = c;
     });
     document.getElementById('title-hex').textContent = c;
+  });
+
+  document.getElementById('viewall-picker').addEventListener('input', function() {
+    var c = this.value;
+    document.querySelectorAll('.all-link-wrapper-sub-heading').forEach(function(el) {
+      el.style.color = c;
+    });
+    document.querySelectorAll('.all-link-wrapper a svg path').forEach(function(el) {
+      el.setAttribute('stroke', c);
+    });
+    document.getElementById('viewall-hex').textContent = c;
   });
 
   document.getElementById('category-picker').addEventListener('input', function() {

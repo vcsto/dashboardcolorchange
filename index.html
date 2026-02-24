@@ -1706,35 +1706,35 @@
     <div style="color:#A0A0AB;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">Page Background</div>
     <div style="display:flex;align-items:center;gap:12px;">
       <input type="color" id="bg-picker" value="#310a42" style="width:44px;height:44px;border:2px solid #C5A7D5;border-radius:10px;cursor:pointer;padding:2px;background:none;">
-      <span id="bg-hex" style="color:#fff;font-size:13px;font-family:monospace;">#310a42</span>
+      <input id="bg-hex" type="text" value="#310a42" oninput="syncPickerFromText('bg')" style="color:#fff;font-size:13px;font-family:monospace;background:none;border:1px solid #C5A7D5;border-radius:6px;padding:4px 8px;width:90px;outline:none;">
     </div>
   </div>
   <div>
     <div style="color:#A0A0AB;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">Header</div>
     <div style="display:flex;align-items:center;gap:12px;">
       <input type="color" id="header-picker" value="#310a42" style="width:44px;height:44px;border:2px solid #C5A7D5;border-radius:10px;cursor:pointer;padding:2px;background:none;">
-      <span id="header-hex" style="color:#fff;font-size:13px;font-family:monospace;">#310a42</span>
+      <input id="header-hex" type="text" value="#310a42" oninput="syncPickerFromText('header')" style="color:#fff;font-size:13px;font-family:monospace;background:none;border:1px solid #C5A7D5;border-radius:6px;padding:4px 8px;width:90px;outline:none;">
     </div>
   </div>
   <div style="margin-top:16px;">
     <div style="color:#A0A0AB;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">Video Titles</div>
     <div style="display:flex;align-items:center;gap:12px;">
       <input type="color" id="title-picker" value="#ffffff" style="width:44px;height:44px;border:2px solid #C5A7D5;border-radius:10px;cursor:pointer;padding:2px;background:none;">
-      <span id="title-hex" style="color:#fff;font-size:13px;font-family:monospace;">#ffffff</span>
+      <input id="title-hex" type="text" value="#ffffff" oninput="syncPickerFromText('title')" style="color:#fff;font-size:13px;font-family:monospace;background:none;border:1px solid #C5A7D5;border-radius:6px;padding:4px 8px;width:90px;outline:none;">
     </div>
   </div>
   <div style="margin-top:16px;">
     <div style="color:#A0A0AB;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">Video Category &amp; Duration</div>
     <div style="display:flex;align-items:center;gap:12px;">
       <input type="color" id="category-picker" value="#a0a0ab" style="width:44px;height:44px;border:2px solid #C5A7D5;border-radius:10px;cursor:pointer;padding:2px;background:none;">
-      <span id="category-hex" style="color:#fff;font-size:13px;font-family:monospace;">#a0a0ab</span>
+      <input id="category-hex" type="text" value="#a0a0ab" oninput="syncPickerFromText('category')" style="color:#fff;font-size:13px;font-family:monospace;background:none;border:1px solid #C5A7D5;border-radius:6px;padding:4px 8px;width:90px;outline:none;">
     </div>
   </div>
   <div style="margin-top:16px;">
     <div style="color:#A0A0AB;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">View All / See All Links</div>
     <div style="display:flex;align-items:center;gap:12px;">
       <input type="color" id="viewall-picker" value="#ffffff" style="width:44px;height:44px;border:2px solid #C5A7D5;border-radius:10px;cursor:pointer;padding:2px;background:none;">
-      <span id="viewall-hex" style="color:#fff;font-size:13px;font-family:monospace;">#ffffff</span>
+      <input id="viewall-hex" type="text" value="#ffffff" oninput="syncPickerFromText('viewall')" style="color:#fff;font-size:13px;font-family:monospace;background:none;border:1px solid #C5A7D5;border-radius:6px;padding:4px 8px;width:90px;outline:none;">
     </div>
   </div>
   <div style="margin-top:16px;">
@@ -1786,7 +1786,7 @@
       var el = document.querySelector('.' + cls);
       if (el) el.style.backgroundColor = c;
     });
-    document.getElementById('bg-hex').textContent = c;
+    document.getElementById('bg-hex').value = c;
   });
 
   document.getElementById('header-picker').addEventListener('input', function() {
@@ -1795,7 +1795,7 @@
     if (header) header.style.backgroundColor = c;
     var dash = document.querySelector('.dash-header-section');
     if (dash) dash.style.backgroundColor = c;
-    document.getElementById('header-hex').textContent = c;
+    document.getElementById('header-hex').value = c;
   });
 
   document.getElementById('title-picker').addEventListener('input', function() {
@@ -1803,7 +1803,7 @@
     document.querySelectorAll('.title, .dashboard-video-title, .side-video-options h2, .all-link-wrapper-main-heading, .three-dot-menu').forEach(function(el) {
       el.style.color = c;
     });
-    document.getElementById('title-hex').textContent = c;
+    document.getElementById('title-hex').value = c;
   });
 
   document.getElementById('viewall-picker').addEventListener('input', function() {
@@ -1814,7 +1814,7 @@
     document.querySelectorAll('.all-link-wrapper a svg path').forEach(function(el) {
       el.setAttribute('stroke', c);
     });
-    document.getElementById('viewall-hex').textContent = c;
+    document.getElementById('viewall-hex').value = c;
   });
 
   document.getElementById('category-picker').addEventListener('input', function() {
@@ -1826,7 +1826,7 @@
       document.head.appendChild(styleEl);
     }
     styleEl.textContent = '.video-card-info-hider > div:last-child, .video-card-info-hider > div:last-child span, .side-video-options ~ div, .side-video-options ~ div span { color: ' + c + ' !important; }';
-    document.getElementById('category-hex').textContent = c;
+    document.getElementById('category-hex').value = c;
   });
 
   document.getElementById('nav-active-picker').addEventListener('input', function() {
@@ -1842,6 +1842,14 @@
       el.style.color = c;
     });
   });
+
+  function syncPickerFromText(id) {
+    var hex = document.getElementById(id + '-hex').value.trim();
+    if (!/^#[0-9a-fA-F]{6}$/.test(hex)) return;
+    var picker = document.getElementById(id + '-picker');
+    picker.value = hex;
+    picker.dispatchEvent(new Event('input'));
+  }
 
   function toggleShadow(toggle) {
     var knob = document.getElementById('shadow-knob');

@@ -1723,6 +1723,13 @@
       <span id="title-hex" style="color:#fff;font-size:13px;font-family:monospace;">#ffffff</span>
     </div>
   </div>
+  <div style="margin-top:16px;">
+    <div style="color:#A0A0AB;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">Video Category &amp; Duration</div>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <input type="color" id="category-picker" value="#a0a0ab" style="width:44px;height:44px;border:2px solid #C5A7D5;border-radius:10px;cursor:pointer;padding:2px;background:none;">
+      <span id="category-hex" style="color:#fff;font-size:13px;font-family:monospace;">#a0a0ab</span>
+    </div>
+  </div>
 </div>
 <script>
   function restoreVideo() {
@@ -1766,5 +1773,17 @@
       el.style.color = c;
     });
     document.getElementById('title-hex').textContent = c;
+  });
+
+  document.getElementById('category-picker').addEventListener('input', function() {
+    var c = this.value;
+    var styleEl = document.getElementById('category-color-style');
+    if (!styleEl) {
+      styleEl = document.createElement('style');
+      styleEl.id = 'category-color-style';
+      document.head.appendChild(styleEl);
+    }
+    styleEl.textContent = '.video-card-info-hider > div, .video-card-info-hider > div span, .side-video-options > div[style*="Gray-iron"], .side-video-options > div[style*="Gray-iron"] span { color: ' + c + ' !important; }';
+    document.getElementById('category-hex').textContent = c;
   });
 </script>

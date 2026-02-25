@@ -261,6 +261,7 @@
  </span>
  <div class=overlay data-url=/TeachingChannel/Detail/1596655>
  <div class="carousel-tag standards">Standards Aligned</div>
+  <button onclick="openLibColorChanger(this)" style="background:transparent;border:2px solid #C5A7D5;color:#C5A7D5;border-radius:20px;padding:4px 12px;font-family:Inter,sans-serif;font-size:13px;font-weight:500;cursor:pointer;margin-top:8px;display:block;">Color Changer</button>
  </div>
  </div>
  <div class="video-card-info-hider pb-3 px-3">
@@ -1545,4 +1546,158 @@
  
  
  
- </div></template></div>
+ 
+
+<!-- Library Color Changer Panel -->
+<div id="lib-color-changer-panel" style="display:none;background:#1e0a2e;border:1px solid #C5A7D5;border-radius:16px;padding:32px;z-index:99999;width:100%;min-height:420px;box-shadow:0 8px 40px rgba(0,0,0,0.7);font-family:Inter,sans-serif;box-sizing:border-box;">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+    <span style="color:#fff;font-size:16px;font-weight:600;">Color Changer</span>
+    <button onclick="restoreLibVideo()" style="background:transparent;border:1px solid #C5A7D5;color:#C5A7D5;border-radius:20px;padding:4px 14px;font-family:Inter,sans-serif;font-size:13px;cursor:pointer;">&#8592; Back to Video</button>
+  </div>
+  <div style="margin-bottom:16px;">
+    <div style="color:#A0A0AB;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">Page Background</div>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <input type="color" id="lib-bg-picker" value="#e8d5f5" style="width:44px;height:44px;border:2px solid #C5A7D5;border-radius:10px;cursor:pointer;padding:2px;background:none;">
+      <input id="lib-bg-hex" type="text" value="#e8d5f5" oninput="libSyncPickerFromText('lib-bg')" style="color:#fff;font-size:13px;font-family:monospace;background:none;border:1px solid #C5A7D5;border-radius:6px;padding:4px 8px;width:90px;outline:none;">
+    </div>
+  </div>
+  <div>
+    <div style="color:#A0A0AB;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">Header</div>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <input type="color" id="lib-header-picker" value="#3a0b54" style="width:44px;height:44px;border:2px solid #C5A7D5;border-radius:10px;cursor:pointer;padding:2px;background:none;">
+      <input id="lib-header-hex" type="text" value="#3a0b54" oninput="libSyncPickerFromText('lib-header')" style="color:#fff;font-size:13px;font-family:monospace;background:none;border:1px solid #C5A7D5;border-radius:6px;padding:4px 8px;width:90px;outline:none;">
+    </div>
+  </div>
+  <div style="margin-top:16px;">
+    <div style="color:#A0A0AB;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">Video Titles</div>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <input type="color" id="lib-title-picker" value="#ffffff" style="width:44px;height:44px;border:2px solid #C5A7D5;border-radius:10px;cursor:pointer;padding:2px;background:none;">
+      <input id="lib-title-hex" type="text" value="#ffffff" oninput="libSyncPickerFromText('lib-title')" style="color:#fff;font-size:13px;font-family:monospace;background:none;border:1px solid #C5A7D5;border-radius:6px;padding:4px 8px;width:90px;outline:none;">
+    </div>
+  </div>
+  <div style="margin-top:16px;">
+    <div style="color:#A0A0AB;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">Video Category &amp; Duration</div>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <input type="color" id="lib-category-picker" value="#a0a0ab" style="width:44px;height:44px;border:2px solid #C5A7D5;border-radius:10px;cursor:pointer;padding:2px;background:none;">
+      <input id="lib-category-hex" type="text" value="#a0a0ab" oninput="libSyncPickerFromText('lib-category')" style="color:#fff;font-size:13px;font-family:monospace;background:none;border:1px solid #C5A7D5;border-radius:6px;padding:4px 8px;width:90px;outline:none;">
+    </div>
+  </div>
+  <div style="margin-top:16px;">
+    <div style="color:#A0A0AB;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">Nav Links</div>
+    <div style="display:flex;align-items:center;gap:24px;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <input type="color" id="lib-nav-active-picker" value="#ffffff" style="width:44px;height:44px;border:2px solid #C5A7D5;border-radius:10px;cursor:pointer;padding:2px;background:none;">
+        <span style="color:#A0A0AB;font-size:12px;">Selected</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <input type="color" id="lib-nav-inactive-picker" value="#c5a7d5" style="width:44px;height:44px;border:2px solid #C5A7D5;border-radius:10px;cursor:pointer;padding:2px;background:none;">
+        <span style="color:#A0A0AB;font-size:12px;">Unselected</span>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:16px;">
+    <div style="color:#A0A0AB;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">Video Card Shadow</div>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+        <div id="lib-shadow-toggle" onclick="libToggleShadow(this)" style="width:44px;height:24px;background:#C5A7D5;border-radius:12px;position:relative;cursor:pointer;transition:background 0.2s;">
+          <div id="lib-shadow-knob" style="width:20px;height:20px;background:#fff;border-radius:50%;position:absolute;top:2px;left:22px;transition:left 0.2s;"></div>
+        </div>
+        <span id="lib-shadow-label" style="color:#fff;font-size:13px;">On</span>
+      </label>
+    </div>
+  </div>
+</div>
+<script>
+  function openLibColorChanger(btn) {
+    var saCol = document.querySelector('.js-video-item-1596655');
+    var nextCol = document.querySelector('.js-video-item-2295232');
+    saCol.querySelector('.vertical-parent-view').style.visibility = 'hidden';
+    nextCol.querySelector('.vertical-parent-view').style.visibility = 'hidden';
+    var panel = document.getElementById('lib-color-changer-panel');
+    saCol.appendChild(panel);
+    panel.style.display = 'block';
+  }
+
+  function restoreLibVideo() {
+    var saCol = document.querySelector('.js-video-item-1596655');
+    var nextCol = document.querySelector('.js-video-item-2295232');
+    saCol.querySelector('.vertical-parent-view').style.visibility = '';
+    nextCol.querySelector('.vertical-parent-view').style.visibility = '';
+    var panel = document.getElementById('lib-color-changer-panel');
+    panel.style.display = 'none';
+  }
+
+  document.getElementById('lib-bg-picker').addEventListener('input', function() {
+    var c = this.value;
+    document.body.style.backgroundColor = c;
+    document.querySelectorAll('.vertical-view-section, .tc-filter').forEach(function(el) { el.style.backgroundColor = c; });
+    document.getElementById('lib-bg-hex').value = c;
+  });
+
+  document.getElementById('lib-header-picker').addEventListener('input', function() {
+    var c = this.value;
+    var header = document.querySelector('header');
+    if (header) header.style.backgroundColor = c;
+    var dash = document.querySelector('.dash-header-section');
+    if (dash) { dash.style.backgroundColor = c; dash.style.backgroundImage = 'none'; }
+    document.getElementById('lib-header-hex').value = c;
+  });
+
+  document.getElementById('lib-title-picker').addEventListener('input', function() {
+    var c = this.value;
+    document.querySelectorAll('.dashboard-video-title').forEach(function(el) { el.style.color = c; });
+    document.getElementById('lib-title-hex').value = c;
+  });
+
+  document.getElementById('lib-category-picker').addEventListener('input', function() {
+    var c = this.value;
+    var styleEl = document.getElementById('lib-category-color-style');
+    if (!styleEl) {
+      styleEl = document.createElement('style');
+      styleEl.id = 'lib-category-color-style';
+      document.head.appendChild(styleEl);
+    }
+    styleEl.textContent = '.account-name, .account-name span, .three-dot-menu span { color: ' + c + ' !important; }';
+    document.getElementById('lib-category-hex').value = c;
+  });
+
+  document.getElementById('lib-nav-active-picker').addEventListener('input', function() {
+    document.querySelectorAll('.dash-header-section-menu.active').forEach(function(el) { el.style.color = this.value; }.bind(this));
+  });
+
+  document.getElementById('lib-nav-inactive-picker').addEventListener('input', function() {
+    document.querySelectorAll('.dash-header-section-menu:not(.active)').forEach(function(el) { el.style.color = this.value; }.bind(this));
+  });
+
+  function libSyncPickerFromText(id) {
+    var hex = document.getElementById(id + '-hex').value.trim();
+    if (!/^#[0-9a-fA-F]{6}$/.test(hex)) return;
+    var picker = document.getElementById(id + '-picker');
+    picker.value = hex;
+    picker.dispatchEvent(new Event('input'));
+  }
+
+  function libToggleShadow(toggle) {
+    var knob = document.getElementById('lib-shadow-knob');
+    var label = document.getElementById('lib-shadow-label');
+    var styleEl = document.getElementById('lib-shadow-disable-style');
+    var isOn = knob.style.left === '22px';
+    if (isOn) {
+      knob.style.left = '2px';
+      toggle.style.background = '#555';
+      label.textContent = 'Off';
+      if (!styleEl) {
+        styleEl = document.createElement('style');
+        styleEl.id = 'lib-shadow-disable-style';
+        document.head.appendChild(styleEl);
+      }
+      styleEl.textContent = '.vertical-video-view:hover, .tchHovereffect:hover, .video-card:hover { box-shadow: none !important; }';
+    } else {
+      knob.style.left = '22px';
+      toggle.style.background = '#C5A7D5';
+      label.textContent = 'On';
+      if (styleEl) styleEl.textContent = '';
+    }
+  }
+</script>
+</div></template></div>

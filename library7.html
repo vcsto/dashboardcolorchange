@@ -82,25 +82,27 @@
  <a href=https://ntch3qa.teachingchannel.com/TeachingChannel/PlaylistsPage class=dash-header-section-menu id=playlist_menu aria-label=Playlists>Playlists</a>
  <a href="https://ntch3qa.teachingchannel.com/TeachingChannel/PlaylistDetailItems/0?type=myFavorite&amp;isFavorite=True" class=dash-header-section-menu id=favorites_menu aria-label=Favorites>Favorites</a>
  <div id="card-color-picker" style="display:inline-flex;align-items:center;gap:8px;margin-left:20px;">
-  <div id="card-color-swatch" style="width:18px;height:18px;border-radius:3px;border:2px solid rgba(255,255,255,0.7);background:#790DA2;flex-shrink:0;"></div>
+  <input type="color" id="card-color-swatch" value="#790DA2" style="-webkit-appearance:none;width:22px;height:22px;border-radius:3px;border:2px solid rgba(255,255,255,0.7);padding:0;cursor:pointer;flex-shrink:0;background:none;">
   <input type="range" id="card-color-slider" min="0" max="100" value="0" style="-webkit-appearance:none;width:130px;height:6px;border-radius:3px;background:linear-gradient(90deg,#790DA2,#AA089A);outline:none;cursor:pointer;border:none;">
-  <span id="card-color-hex" style="color:#fff;font-size:11px;font-family:monospace;opacity:0;min-width:56px;"></span>
+  <input type="text" id="card-color-hex" maxlength="7" placeholder="#790DA2" style="color:#fff;font-size:11px;font-family:monospace;width:62px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.4);border-radius:3px;padding:2px 5px;outline:none;">
   <button id="card-color-revert" style="background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.5);border-radius:4px;padding:3px 10px;font-size:12px;cursor:pointer;white-space:nowrap;font-family:inherit;">Revert Changes</button>
  </div>
- <style>#card-color-slider::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:#fff;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.4);}#card-color-slider::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:#fff;cursor:pointer;border:none;box-shadow:0 1px 3px rgba(0,0,0,0.4);}</style>
+ <style>#card-color-slider::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:#fff;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.4);}#card-color-slider::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:#fff;cursor:pointer;border:none;box-shadow:0 1px 3px rgba(0,0,0,0.4);}#card-color-swatch::-webkit-color-swatch-wrapper{padding:0;}#card-color-swatch::-webkit-color-swatch{border:none;border-radius:1px;}#card-color-hex::placeholder{color:rgba(255,255,255,0.45);}</style>
  <script>
  (function(){
   var slider=document.getElementById("card-color-slider");
   var swatch=document.getElementById("card-color-swatch");
-  var hexLabel=document.getElementById("card-color-hex");
+  var hexInput=document.getElementById("card-color-hex");
   var revertBtn=document.getElementById("card-color-revert");
   var overrideStyle=null;
   var c1=[121,13,162],c2=[170,8,154];
   function toHex(v){return("0"+Math.round(v).toString(16)).slice(-2);}
-  function interp(t){var r=c1[0]+(c2[0]-c1[0])*t,g=c1[1]+(c2[1]-c1[1])*t,b=c1[2]+(c2[2]-c1[2])*t;return{rgb:"rgb("+Math.round(r)+","+Math.round(g)+","+Math.round(b)+")",hex:"#"+toHex(r)+toHex(g)+toHex(b)};}
-  function apply(t){var col=interp(t);if(!overrideStyle){overrideStyle=document.createElement("style");overrideStyle.id="card-color-override";document.head.appendChild(overrideStyle);}overrideStyle.textContent=".vertical-video-view{background:"+col.rgb+"!important}";swatch.style.background=col.rgb;hexLabel.textContent=col.hex.toUpperCase();hexLabel.style.opacity=1;}
-  function revert(){if(overrideStyle){overrideStyle.parentNode.removeChild(overrideStyle);overrideStyle=null;}swatch.style.background="#790DA2";slider.value=0;hexLabel.textContent="";hexLabel.style.opacity=0;}
-  slider.addEventListener("input",function(){apply(this.value/100);});
+  function interpHex(t){var r=c1[0]+(c2[0]-c1[0])*t,g=c1[1]+(c2[1]-c1[1])*t,b=c1[2]+(c2[2]-c1[2])*t;return"#"+toHex(r)+toHex(g)+toHex(b);}
+  function applyHex(hex){if(!overrideStyle){overrideStyle=document.createElement("style");overrideStyle.id="card-color-override";document.head.appendChild(overrideStyle);}overrideStyle.textContent=".vertical-video-view{background:"+hex+"!important}";swatch.value=hex;hexInput.value=hex.toUpperCase();}
+  function revert(){if(overrideStyle){overrideStyle.parentNode.removeChild(overrideStyle);overrideStyle=null;}swatch.value="#790DA2";hexInput.value="";slider.value=0;}
+  slider.addEventListener("input",function(){applyHex(interpHex(this.value/100));});
+  swatch.addEventListener("input",function(){applyHex(this.value);slider.value=0;});
+  hexInput.addEventListener("keydown",function(e){if(e.key==="Enter"){var v=this.value.trim();if(!/^#/.test(v))v="#"+v;if(/^#[0-9a-fA-F]{6}$/.test(v)){applyHex(v);slider.value=0;}}});
   revertBtn.addEventListener("click",revert);
  })();
  </script>

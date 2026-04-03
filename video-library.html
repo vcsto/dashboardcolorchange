@@ -67,7 +67,7 @@
  </div>
  
 <div>
-<style class=sf-hidden>.header_menu_box a{text-decoration:none}.header_menu_box a:hover{text-decoration:none;color:var(--Collab-40,#C5A7D5)}*:focus{outline:2px solid var(--Collab-40,#C5A7D5);outline-offset:2px}@media (max-width:575.98px){.dash-header-section{padding-bottom:20px}}@media (max-width:575.98px){.detail-tab-header::-webkit-scrollbar{display:none}}@media (max-width:767.98px){.logo-img{height:37px!important}}</style>
+<style>.dash-header-section-menu{color:#fff!important}</style><style class=sf-hidden>.header_menu_box a{text-decoration:none}.header_menu_box a:hover{text-decoration:none;color:var(--Collab-40,#C5A7D5)}*:focus{outline:2px solid var(--Collab-40,#C5A7D5);outline-offset:2px}@media (max-width:575.98px){.dash-header-section{padding-bottom:20px}}@media (max-width:575.98px){.detail-tab-header::-webkit-scrollbar{display:none}}@media (max-width:767.98px){.logo-img{height:37px!important}}</style>
 <header>
  <div class=dash-header-section>
  <div class="teacher-header-heading d-flex justify-content-between align-items-center">
@@ -100,7 +100,7 @@
   function interpHex(t){var r=c1[0]+(c2[0]-c1[0])*t,g=c1[1]+(c2[1]-c1[1])*t,b=c1[2]+(c2[2]-c1[2])*t;return"#"+toHex(r)+toHex(g)+toHex(b);}
   function hexToRgb(hex){return[parseInt(hex.slice(1,3),16),parseInt(hex.slice(3,5),16),parseInt(hex.slice(5,7),16)];}
   function findSliderT(r,g,b){var tr=(r-c1[0])/(c2[0]-c1[0]),tg=(c1[1]-g)/(c1[1]-c2[1]),tb=(c1[2]-b)/(c1[2]-c2[2]),eps=0.05;if(Math.abs(tr-tg)<eps&&Math.abs(tr-tb)<eps&&tr>=-eps&&tr<=1+eps)return Math.max(0,Math.min(1,(tr+tg+tb)/3));return null;}
-  function applyHex(hex){if(!overrideStyle){overrideStyle=document.createElement("style");overrideStyle.id="card-color-override";document.head.appendChild(overrideStyle);}overrideStyle.textContent=".vertical-video-view{background:"+hex+"!important}.dash-header-section{background-image:none!important;background-color:"+hex+"!important}";swatch.value=hex;hexInput.value=hex.toUpperCase();}
+  function applyHex(hex){if(!overrideStyle){overrideStyle=document.createElement("style");overrideStyle.id="card-color-override";document.head.appendChild(overrideStyle);}overrideStyle.textContent=".vertical-video-view{background:"+hex+"!important}.dash-header-section{background-image:none!important;background-color:"+hex+"!important}.dash-header-section-menu{color:#fff!important}";swatch.value=hex;hexInput.value=hex.toUpperCase();}
   function revert(){if(overrideStyle){overrideStyle.parentNode.removeChild(overrideStyle);overrideStyle=null;}swatch.value="#790DA2";hexInput.value="";slider.value=0;}
   slider.addEventListener("input",function(){applyHex(interpHex(this.value/100));});
   swatch.addEventListener("input",function(){var rgb=hexToRgb(this.value),t=findSliderT(rgb[0],rgb[1],rgb[2]);if(t!==null)slider.value=Math.round(t*100);else slider.value=0;applyHex(this.value);});

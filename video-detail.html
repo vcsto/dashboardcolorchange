@@ -203,7 +203,7 @@
  
  </div>
  </div>
- <button class="btn btn-create-progress" style="border-radius:30px;border:1px solid;border-color:#A97CBF;line-height:16px">
+ <button id="js-share-btn" class="btn btn-create-progress" style="border-radius:30px;border:1px solid;border-color:#A97CBF;line-height:16px">
  <svg xmlns=http://www.w3.org/2000/svg width=18 height=18 viewBox="0 0 16 16" fill=none aria-hidden=true style=position:relative;display:inline-block>
  <path d="M13.8609 8.40489C14.0237 8.26539 14.105 8.19564 14.1348 8.11264C14.161 8.03979 14.161 7.96011 14.1348 7.88726C14.105 7.80426 14.0237 7.73451 13.8609 7.59501L8.21375 2.7546C7.9336 2.51447 7.79353 2.3944 7.67493 2.39146C7.57186 2.3889 7.47341 2.43418 7.40828 2.5141C7.33333 2.60606 7.33333 2.79055 7.33333 3.15953V6.02304C5.91021 6.27201 4.60773 6.99312 3.63981 8.07586C2.58455 9.25629 2.00082 10.7839 2 12.3673V12.7753C2.69956 11.9325 3.573 11.251 4.56051 10.7772C5.43113 10.3596 6.37228 10.1122 7.33333 10.047V12.8404C7.33333 13.2093 7.33333 13.3938 7.40828 13.4858C7.47341 13.5657 7.57186 13.611 7.67493 13.6084C7.79353 13.6055 7.9336 13.4854 8.21375 13.2453L13.8609 8.40489Z" stroke=currentColor stroke-width=1.5 stroke-linecap=round stroke-linejoin=round></path>
  </svg>
@@ -269,7 +269,44 @@
  
 </div>
 <div class="modal fade" id=shareObservationModel tabindex=-1 style=display:none aria-labelledby=shareObservationModelTitle aria-hidden=true>
+  <div style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1050;display:flex;align-items:center;justify-content:center;" id="share-modal-backdrop">
+    <div style="background:#fff;border-radius:8px;padding:32px;width:480px;max-width:90vw;position:relative;box-shadow:0 4px 24px rgba(0,0,0,0.2);">
+      <button id="share-modal-close" aria-label="Close" style="position:absolute;top:16px;right:16px;background:none;border:none;font-size:20px;cursor:pointer;color:#555;">&#x2715;</button>
+      <h2 style="margin:0 0 4px;font-size:20px;font-weight:700;">Share Video</h2>
+      <p style="margin:0 0 24px;color:#555;font-size:14px;">Select colleagues to share this video with.</p>
+      <label style="font-weight:600;font-size:14px;display:block;margin-bottom:6px;">Select Cohort</label>
+      <select style="width:100%;padding:10px 12px;border:1px solid #ccc;border-radius:6px;font-size:14px;margin-bottom:16px;appearance:auto;">
+        <option value="">Choose...</option>
+      </select>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <label style="font-weight:600;font-size:14px;">Share with...</label>
+        <label style="display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer;">
+          <input type="checkbox" id="share-select-all" style="width:16px;height:16px;"> Select All
+        </label>
+      </div>
+      <div style="display:flex;align-items:center;border:1px solid #ccc;border-radius:6px;padding:8px 12px;margin-bottom:24px;">
+        <svg width=16 height=16 viewBox="0 0 24 24" fill=none stroke=#999 stroke-width=2 stroke-linecap=round stroke-linejoin=round style=margin-right:8px><circle cx=11 cy=11 r=8></circle><line x1=21 y1=21 x2=16.65 y2=16.65></line></svg>
+        <input type="text" placeholder="" style="border:none;outline:none;width:100%;font-size:14px;">
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:12px;">
+        <button id="share-modal-cancel" style="padding:10px 20px;border:1px solid #ccc;border-radius:6px;background:#fff;font-size:14px;cursor:pointer;">Cancel</button>
+        <button style="padding:10px 20px;border:none;border-radius:6px;background:#1e3a6e;color:#fff;font-size:14px;font-weight:600;cursor:pointer;">Share Video</button>
+      </div>
+    </div>
+  </div>
 </div>
+<script>
+(function(){
+  var modal = document.getElementById('shareObservationModel');
+  var openBtn = document.getElementById('js-share-btn');
+  function openModal(){ modal.style.display='block'; }
+  function closeModal(){ modal.style.display='none'; }
+  if(openBtn) openBtn.addEventListener('click', openModal);
+  document.getElementById('share-modal-close').addEventListener('click', closeModal);
+  document.getElementById('share-modal-cancel').addEventListener('click', closeModal);
+  document.getElementById('share-modal-backdrop').addEventListener('click', function(e){ if(e.target===this) closeModal(); });
+})();
+</script>
  <span class=all-link-wrapper style=margin-top:3%>
  <span class=all-link-wrapper-main-heading style=margin-left:20px>Related Videos</span>
  <a href=https://ntchqa.teachingchannel.com/TeachingChannel style=text-decoration:none aria-label="View all related videos">

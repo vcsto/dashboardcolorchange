@@ -287,13 +287,13 @@
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
       <label style="font-weight:600;font-size:14px;">Share with...</label>
       <label style="display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer;">
-        <input type="checkbox" id="share-select-all" style="width:16px;height:16px;"> Select All
+        <input type="checkbox" id="share-select-all" disabled style="width:16px;height:16px;opacity:0.4;cursor:not-allowed;"> Select All
       </label>
     </div>
     <div class="share-search-wrap" style="position:relative;margin-bottom:24px;">
       <div style="display:flex;align-items:center;border:1px solid #ccc;border-radius:6px;padding:8px 12px;">
         <svg width=16 height=16 viewBox="0 0 24 24" fill=none stroke=#999 stroke-width=2 stroke-linecap=round stroke-linejoin=round style="margin-right:8px;flex-shrink:0"><circle cx=11 cy=11 r=8></circle><line x1=21 y1=21 x2=16.65 y2=16.65></line></svg>
-        <input id="share-search" type="text" placeholder="Search..." style="border:none;outline:none;width:100%;font-size:14px;" autocomplete="off">
+        <input id="share-search" type="text" placeholder="Search..." disabled style="border:none;outline:none;width:100%;font-size:14px;background:transparent;cursor:not-allowed;opacity:0.4;" autocomplete="off">
       </div>
       <div id="share-colleagues-list" style="display:none;position:absolute;top:100%;left:0;right:0;max-height:180px;overflow-y:auto;border:1px solid #ccc;border-top:none;border-radius:0 0 6px 6px;background:#fff;z-index:10000;padding:4px 0;box-shadow:0 4px 12px rgba(0,0,0,0.1);">
       </div>
@@ -316,6 +316,18 @@
   var list = document.getElementById('share-colleagues-list');
   var searchInput = document.getElementById('share-search');
   var selectAll = document.getElementById('share-select-all');
+  var cohortSelect = document.getElementById('share-cohort-select');
+
+  function setShareEnabled(enabled){
+    searchInput.disabled = !enabled;
+    searchInput.style.opacity = enabled ? '1' : '0.4';
+    searchInput.style.cursor = enabled ? 'text' : 'not-allowed';
+    selectAll.disabled = !enabled;
+    selectAll.style.opacity = enabled ? '1' : '0.4';
+    selectAll.style.cursor = enabled ? 'pointer' : 'not-allowed';
+  }
+
+  cohortSelect.addEventListener('change', function(){ setShareEnabled(this.value !== ''); });
 
   function renderList(filter){
     list.innerHTML='';

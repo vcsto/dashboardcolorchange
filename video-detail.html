@@ -276,18 +276,25 @@
     <h2 style="margin:0 0 4px;font-size:20px;font-weight:700;">Share Video</h2>
     <p style="margin:0 0 24px;color:#555;font-size:14px;">Select colleagues to share this video with.</p>
     <label style="font-weight:600;font-size:14px;display:block;margin-bottom:6px;">Select Cohort</label>
-    <select style="width:100%;padding:10px 12px;border:1px solid #ccc;border-radius:6px;font-size:14px;margin-bottom:16px;">
+    <select id="share-cohort-select" style="width:100%;padding:10px 12px;border:1px solid #ccc;border-radius:6px;font-size:14px;margin-bottom:16px;">
       <option value="">Choose...</option>
+      <option>Fall 2025 Cohort</option>
+      <option>Spring 2026 Cohort</option>
+      <option>Math Instructional Leaders</option>
+      <option>Literacy Coaches Network</option>
+      <option>New Teacher Induction</option>
     </select>
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
       <label style="font-weight:600;font-size:14px;">Share with...</label>
       <label style="display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer;">
-        <input type="checkbox" style="width:16px;height:16px;"> Select All
+        <input type="checkbox" id="share-select-all" style="width:16px;height:16px;"> Select All
       </label>
     </div>
-    <div style="display:flex;align-items:center;border:1px solid #ccc;border-radius:6px;padding:8px 12px;margin-bottom:24px;">
+    <div style="display:flex;align-items:center;border:1px solid #ccc;border-radius:6px;padding:8px 12px;margin-bottom:8px;">
       <svg width=16 height=16 viewBox="0 0 24 24" fill=none stroke=#999 stroke-width=2 stroke-linecap=round stroke-linejoin=round style="margin-right:8px;flex-shrink:0"><circle cx=11 cy=11 r=8></circle><line x1=21 y1=21 x2=16.65 y2=16.65></line></svg>
-      <input type="text" style="border:none;outline:none;width:100%;font-size:14px;">
+      <input id="share-search" type="text" placeholder="Search..." style="border:none;outline:none;width:100%;font-size:14px;">
+    </div>
+    <div id="share-colleagues-list" style="max-height:160px;overflow-y:auto;border:1px solid #eee;border-radius:6px;margin-bottom:24px;padding:4px 0;">
     </div>
     <div style="display:flex;justify-content:flex-end;gap:12px;">
       <button id="share-modal-cancel" style="padding:10px 20px;border:1px solid #ccc;border-radius:6px;background:#fff;font-size:14px;cursor:pointer;">Cancel</button>
@@ -297,7 +304,36 @@
 </div>
 <script>
 (function(){
+  var colleagues = [
+    'Sarah Johnson','Marcus Williams','Emily Chen','David Rodriguez',
+    'Amanda Foster','James Patterson','Lisa Nguyen','Robert Kim',
+    'Tanya Brooks','Michael Osei','Jennifer Walsh','Carlos Mendez'
+  ];
+
   var overlay = document.getElementById('share-modal-overlay');
+  var list = document.getElementById('share-colleagues-list');
+  var searchInput = document.getElementById('share-search');
+  var selectAll = document.getElementById('share-select-all');
+
+  function renderList(filter){
+    list.innerHTML='';
+    colleagues.filter(function(n){ return n.toLowerCase().indexOf((filter||'').toLowerCase())>-1; })
+      .forEach(function(name){
+        var row = document.createElement('label');
+        row.style.cssText='display:flex;align-items:center;gap:10px;padding:8px 14px;cursor:pointer;font-size:14px;';
+        row.innerHTML='<input type="checkbox" class="share-colleague-cb" style="width:15px;height:15px;"> '+name;
+        list.appendChild(row);
+      });
+  }
+
+  renderList('');
+
+  searchInput.addEventListener('input', function(){ renderList(this.value); selectAll.checked=false; });
+
+  selectAll.addEventListener('change', function(){
+    list.querySelectorAll('.share-colleague-cb').forEach(function(cb){ cb.checked=selectAll.checked; });
+  });
+
   function openModal(){
     overlay.style.display='flex';
     document.body.style.overflow='hidden';

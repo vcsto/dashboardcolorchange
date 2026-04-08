@@ -369,13 +369,12 @@
 
   renderList('');
 
-  inputBox.addEventListener('click', function(){ if(!searchInput.disabled){ searchInput.focus(); list.style.display='block'; }});
+  inputBox.addEventListener('click', function(e){ e.stopPropagation(); if(!searchInput.disabled){ searchInput.focus(); list.style.display='block'; }});
   searchInput.addEventListener('focus', function(){ list.style.display='block'; });
   searchInput.addEventListener('input', function(){ renderList(this.value); list.style.display='block'; });
-  document.addEventListener('click', function(e){
-    if(!e.target.closest('#share-modal-overlay .share-search-wrap')) list.style.display='none';
-  });
+  list.addEventListener('click', function(e){ e.stopPropagation(); });
   list.addEventListener('mousedown', function(e){ e.preventDefault(); });
+  document.addEventListener('click', function(){ list.style.display='none'; });
 
   selectAll.addEventListener('change', function(){
     if(this.checked) colleagues.forEach(function(c){ selected[c.name]=true; });

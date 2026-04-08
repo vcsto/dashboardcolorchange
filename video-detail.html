@@ -291,11 +291,12 @@
       </label>
     </div>
     <div class="share-search-wrap" style="position:relative;margin-bottom:24px;">
-      <div style="display:flex;align-items:center;border:1px solid #ccc;border-radius:6px;padding:8px 12px;">
-        <svg width=16 height=16 viewBox="0 0 24 24" fill=none stroke=#999 stroke-width=2 stroke-linecap=round stroke-linejoin=round style="margin-right:8px;flex-shrink:0"><circle cx=11 cy=11 r=8></circle><line x1=21 y1=21 x2=16.65 y2=16.65></line></svg>
-        <input id="share-search" type="text" placeholder="Search..." disabled style="border:none;outline:none;width:100%;font-size:14px;background:transparent;cursor:not-allowed;opacity:0.4;" autocomplete="off">
+      <div id="share-input-box" style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;border:1px solid #ccc;border-radius:6px;padding:8px 12px;min-height:42px;cursor:text;">
+        <svg width=16 height=16 viewBox="0 0 24 24" fill=none stroke=#999 stroke-width=2 stroke-linecap=round stroke-linejoin=round style="flex-shrink:0"><circle cx=11 cy=11 r=8></circle><line x1=21 y1=21 x2=16.65 y2=16.65></line></svg>
+        <div id="share-tags" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+        <input id="share-search" type="text" placeholder="Search..." disabled style="border:none;outline:none;flex:1;min-width:80px;font-size:14px;background:transparent;cursor:not-allowed;opacity:0.4;" autocomplete="off">
       </div>
-      <div id="share-colleagues-list" style="display:none;position:absolute;top:100%;left:0;right:0;max-height:180px;overflow-y:auto;border:1px solid #ccc;border-top:none;border-radius:0 0 6px 6px;background:#fff;z-index:10000;padding:4px 0;box-shadow:0 4px 12px rgba(0,0,0,0.1);">
+      <div id="share-colleagues-list" style="display:none;position:absolute;top:100%;left:0;right:0;max-height:220px;overflow-y:auto;border:1px solid #ccc;border-top:none;border-radius:0 0 6px 6px;background:#fff;z-index:10000;padding:4px 0;box-shadow:0 4px 12px rgba(0,0,0,0.1);">
       </div>
     </div>
     <div style="display:flex;justify-content:flex-end;gap:12px;">
@@ -307,57 +308,80 @@
 <script>
 (function(){
   var colleagues = [
-    'Sarah Johnson','Marcus Williams','Emily Chen','David Rodriguez',
-    'Amanda Foster','James Patterson','Lisa Nguyen','Robert Kim',
-    'Tanya Brooks','Michael Osei','Jennifer Walsh','Carlos Mendez'
+    {name:'Sarah Johnson',    email:'sarah.johnson@teachingchannel.com'},
+    {name:'Marcus Williams',  email:'marcus.williams@teachingchannel.com'},
+    {name:'Emily Chen',       email:'emily.chen@teachingchannel.com'},
+    {name:'David Rodriguez',  email:'david.rodriguez@teachingchannel.com'},
+    {name:'Amanda Foster',    email:'amanda.foster@teachingchannel.com'},
+    {name:'James Patterson',  email:'james.patterson@teachingchannel.com'},
+    {name:'Lisa Nguyen',      email:'lisa.nguyen@teachingchannel.com'},
+    {name:'Robert Kim',       email:'robert.kim@teachingchannel.com'},
+    {name:'Tanya Brooks',     email:'tanya.brooks@teachingchannel.com'},
+    {name:'Michael Osei',     email:'michael.osei@teachingchannel.com'},
+    {name:'Jennifer Walsh',   email:'jennifer.walsh@teachingchannel.com'},
+    {name:'Carlos Mendez',    email:'carlos.mendez@teachingchannel.com'}
   ];
 
-  var overlay = document.getElementById('share-modal-overlay');
-  var list = document.getElementById('share-colleagues-list');
-  var searchInput = document.getElementById('share-search');
-  var selectAll = document.getElementById('share-select-all');
+  var selected = {};
+
+  var overlay      = document.getElementById('share-modal-overlay');
+  var list         = document.getElementById('share-colleagues-list');
+  var searchInput  = document.getElementById('share-search');
+  var selectAll    = document.getElementById('share-select-all');
   var cohortSelect = document.getElementById('share-cohort-select');
+  var submitBtn    = document.getElementById('share-submit-btn');
+  var tagsEl       = document.getElementById('share-tags');
+  var inputBox     = document.getElementById('share-input-box');
 
-  var submitBtn = document.getElementById('share-submit-btn');
+  function initials(name){ return name.split(' ').map(function(p){return p[0];}).join('').toUpperCase(); }
 
-  function setShareEnabled(enabled){
-    searchInput.disabled = !enabled;
-    searchInput.style.opacity = enabled ? '1' : '0.4';
-    searchInput.style.cursor = enabled ? 'text' : 'not-allowed';
-    selectAll.disabled = !enabled;
-    selectAll.style.opacity = enabled ? '1' : '0.4';
-    selectAll.style.cursor = enabled ? 'pointer' : 'not-allowed';
-    submitBtn.disabled = !enabled;
-    submitBtn.style.opacity = enabled ? '1' : '0.4';
-    submitBtn.style.cursor = enabled ? 'pointer' : 'not-allowed';
+  function renderTags(){
+    tagsEl.innerHTML='';
+    Object.keys(selected).forEach(function(name){
+      var tag = document.createElement('span');
+      tag.style.cssText='display:inline-flex;align-items:center;gap:4px;background:#1e3a6e;color:#fff;border-radius:20px;padding:3px 10px 3px 6px;font-size:13px;white-space:nowrap;';
+      tag.innerHTML='<span style="display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:#790DA2;font-size:10px;font-weight:700;">'+initials(name)+'</span> '+name+' <span class="share-tag-x" style="cursor:pointer;margin-left:2px;font-size:14px;line-height:1;">&times;</span>';
+      tag.querySelector('.share-tag-x').addEventListener('click', function(){ delete selected[name]; renderTags(); renderList(searchInput.value); });
+      tagsEl.appendChild(tag);
+    });
   }
-
-  cohortSelect.addEventListener('change', function(){ setShareEnabled(this.value !== ''); });
 
   function renderList(filter){
     list.innerHTML='';
-    colleagues.filter(function(n){ return n.toLowerCase().indexOf((filter||'').toLowerCase())>-1; })
-      .forEach(function(name){
-        var row = document.createElement('label');
-        row.style.cssText='display:flex;align-items:center;gap:10px;padding:8px 14px;cursor:pointer;font-size:14px;';
-        row.innerHTML='<input type="checkbox" class="share-colleague-cb" style="width:15px;height:15px;"> '+name;
+    colleagues.filter(function(c){ return c.name.toLowerCase().indexOf((filter||'').toLowerCase())>-1; })
+      .forEach(function(c){
+        var row = document.createElement('div');
+        row.style.cssText='display:flex;align-items:center;gap:12px;padding:10px 14px;cursor:pointer;border-bottom:1px solid #f0f0f0;';
+        var isChecked = !!selected[c.name];
+        var ini = initials(c.name);
+        row.innerHTML=
+          '<input type="checkbox" class="share-colleague-cb" '+(isChecked?'checked':'')+' style="width:16px;height:16px;accent-color:#790DA2;flex-shrink:0;">'+
+          '<span style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:#790DA2;color:#fff;font-size:13px;font-weight:700;flex-shrink:0;">'+ini+'</span>'+
+          '<div><div style="font-size:14px;font-weight:600;">'+c.name+'</div><div style="font-size:12px;color:#777;">'+c.email+'</div></div>';
+        row.querySelector('.share-colleague-cb').addEventListener('change', function(){
+          if(this.checked) selected[c.name]=true; else delete selected[c.name];
+          renderTags();
+          selectAll.checked = colleagues.every(function(x){ return !!selected[x.name]; });
+        });
         list.appendChild(row);
       });
   }
 
   renderList('');
 
+  inputBox.addEventListener('click', function(){ if(!searchInput.disabled){ searchInput.focus(); list.style.display='block'; }});
   searchInput.addEventListener('focus', function(){ list.style.display='block'; });
-  searchInput.addEventListener('input', function(){ renderList(this.value); selectAll.checked=false; list.style.display='block'; });
+  searchInput.addEventListener('input', function(){ renderList(this.value); list.style.display='block'; });
   document.addEventListener('click', function(e){
     if(!e.target.closest('#share-modal-overlay .share-search-wrap')) list.style.display='none';
   });
-  // keep open when clicking inside the list
   list.addEventListener('mousedown', function(e){ e.preventDefault(); });
 
   selectAll.addEventListener('change', function(){
+    if(this.checked) colleagues.forEach(function(c){ selected[c.name]=true; });
+    else selected={};
+    renderTags();
     renderList(searchInput.value);
-    list.querySelectorAll('.share-colleague-cb').forEach(function(cb){ cb.checked=selectAll.checked; });
     list.style.display='block';
   });
 

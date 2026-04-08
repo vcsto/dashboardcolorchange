@@ -369,6 +369,20 @@
 
   renderList('');
 
+  function setShareEnabled(enabled){
+    searchInput.disabled = !enabled;
+    searchInput.style.opacity = enabled ? '1' : '0.4';
+    searchInput.style.cursor = enabled ? 'text' : 'not-allowed';
+    selectAll.disabled = !enabled;
+    selectAll.style.opacity = enabled ? '1' : '0.4';
+    selectAll.style.cursor = enabled ? 'pointer' : 'not-allowed';
+    submitBtn.disabled = !enabled;
+    submitBtn.style.opacity = enabled ? '1' : '0.4';
+    submitBtn.style.cursor = enabled ? 'pointer' : 'not-allowed';
+  }
+
+  cohortSelect.addEventListener('change', function(){ setShareEnabled(this.value !== ''); });
+
   inputBox.addEventListener('click', function(e){ e.stopPropagation(); if(!searchInput.disabled){ searchInput.focus(); list.style.display='block'; }});
   searchInput.addEventListener('focus', function(){ list.style.display='block'; });
   searchInput.addEventListener('input', function(){ renderList(this.value); list.style.display='block'; });

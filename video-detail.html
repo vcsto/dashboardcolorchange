@@ -290,11 +290,13 @@
         <input type="checkbox" id="share-select-all" style="width:16px;height:16px;"> Select All
       </label>
     </div>
-    <div style="display:flex;align-items:center;border:1px solid #ccc;border-radius:6px;padding:8px 12px;margin-bottom:8px;">
-      <svg width=16 height=16 viewBox="0 0 24 24" fill=none stroke=#999 stroke-width=2 stroke-linecap=round stroke-linejoin=round style="margin-right:8px;flex-shrink:0"><circle cx=11 cy=11 r=8></circle><line x1=21 y1=21 x2=16.65 y2=16.65></line></svg>
-      <input id="share-search" type="text" placeholder="Search..." style="border:none;outline:none;width:100%;font-size:14px;">
-    </div>
-    <div id="share-colleagues-list" style="max-height:160px;overflow-y:auto;border:1px solid #eee;border-radius:6px;margin-bottom:24px;padding:4px 0;">
+    <div class="share-search-wrap" style="position:relative;margin-bottom:24px;">
+      <div style="display:flex;align-items:center;border:1px solid #ccc;border-radius:6px;padding:8px 12px;">
+        <svg width=16 height=16 viewBox="0 0 24 24" fill=none stroke=#999 stroke-width=2 stroke-linecap=round stroke-linejoin=round style="margin-right:8px;flex-shrink:0"><circle cx=11 cy=11 r=8></circle><line x1=21 y1=21 x2=16.65 y2=16.65></line></svg>
+        <input id="share-search" type="text" placeholder="Search..." style="border:none;outline:none;width:100%;font-size:14px;" autocomplete="off">
+      </div>
+      <div id="share-colleagues-list" style="display:none;position:absolute;top:100%;left:0;right:0;max-height:180px;overflow-y:auto;border:1px solid #ccc;border-top:none;border-radius:0 0 6px 6px;background:#fff;z-index:10000;padding:4px 0;box-shadow:0 4px 12px rgba(0,0,0,0.1);">
+      </div>
     </div>
     <div style="display:flex;justify-content:flex-end;gap:12px;">
       <button id="share-modal-cancel" style="padding:10px 20px;border:1px solid #ccc;border-radius:6px;background:#fff;font-size:14px;cursor:pointer;">Cancel</button>
@@ -328,10 +330,18 @@
 
   renderList('');
 
-  searchInput.addEventListener('input', function(){ renderList(this.value); selectAll.checked=false; });
+  searchInput.addEventListener('focus', function(){ list.style.display='block'; });
+  searchInput.addEventListener('input', function(){ renderList(this.value); selectAll.checked=false; list.style.display='block'; });
+  document.addEventListener('click', function(e){
+    if(!e.target.closest('#share-modal-overlay .share-search-wrap')) list.style.display='none';
+  });
+  // keep open when clicking inside the list
+  list.addEventListener('mousedown', function(e){ e.preventDefault(); });
 
   selectAll.addEventListener('change', function(){
+    renderList(searchInput.value);
     list.querySelectorAll('.share-colleague-cb').forEach(function(cb){ cb.checked=selectAll.checked; });
+    list.style.display='block';
   });
 
   function openModal(){

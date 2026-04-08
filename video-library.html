@@ -116,8 +116,9 @@
     var pass=ratio>=4.5;
     wcagRatio.textContent=ratio.toFixed(2)+":1";
     wcagLabel.textContent=pass?"AA ✓":"AA ✗";
-    wcagBadge.style.borderColor=pass?"rgba(100,255,150,0.7)":"rgba(255,100,100,0.7)";
-    wcagLabel.style.color=pass?"#7fff9a":"#ff8080";
+    wcagBadge.style.borderColor=pass?"rgba(100,255,150,0.7)":"rgba(220,38,38,0.9)";
+    wcagLabel.style.color=pass?"#7fff9a":"#dc2626";
+    wcagLabel.style.fontWeight="bold";
   }
   function applyHex(hex){if(!overrideStyle){overrideStyle=document.createElement("style");overrideStyle.id="card-color-override";document.head.appendChild(overrideStyle);}overrideStyle.textContent=".vertical-video-view{background:"+hex+"!important}.dash-header-section{background-image:none!important;background-color:"+hex+"!important}.dash-header-section-menu{color:#fff!important}";swatch.value=hex;hexInput.value=hex.toUpperCase();updateWcag(hex);}
   function revert(){if(overrideStyle){overrideStyle.parentNode.removeChild(overrideStyle);overrideStyle=null;}swatch.value="#790DA2";hexInput.value="";slider.value=0;updateWcag("#790DA2");}

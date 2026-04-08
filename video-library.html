@@ -86,6 +86,10 @@
   <input type="range" id="card-color-slider" min="0" max="100" value="0" style="-webkit-appearance:none;width:130px;height:6px;border-radius:3px;background:linear-gradient(90deg,#790DA2,#AA089A);outline:none;cursor:pointer;border:none;">
   <input type="text" id="card-color-hex" maxlength="7" placeholder="#790DA2" style="color:#fff;font-size:11px;font-family:monospace;width:62px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.4);border-radius:3px;padding:2px 5px;outline:none;">
   <button id="card-color-revert" style="background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.5);border-radius:4px;padding:3px 10px;font-size:12px;cursor:pointer;white-space:nowrap;font-family:inherit;">Revert Changes</button>
+  <span id="wcag-badge" title="WCAG AA requires 4.5:1 contrast ratio with white text" style="display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.4);border-radius:4px;padding:3px 10px;font-size:12px;color:#fff;white-space:nowrap;font-family:inherit;">
+    <span id="wcag-ratio">—</span>
+    <span id="wcag-label" style="font-weight:700;">AA</span>
+  </span>
  </div>
  <style>#card-color-slider::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:#fff;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.4);}#card-color-slider::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:#fff;cursor:pointer;border:none;box-shadow:0 1px 3px rgba(0,0,0,0.4);}#card-color-swatch::-webkit-color-swatch-wrapper{padding:0;}#card-color-swatch::-webkit-color-swatch{border:none;border-radius:1px;}#card-color-hex::placeholder{color:rgba(255,255,255,0.45);}</style>
  <script>
@@ -96,16 +100,32 @@
   var revertBtn=document.getElementById("card-color-revert");
   var overrideStyle=null;
   var c1=[121,13,162],c2=[170,8,154];
+  var wcagBadge=document.getElementById("wcag-badge");
+  var wcagRatio=document.getElementById("wcag-ratio");
+  var wcagLabel=document.getElementById("wcag-label");
   function toHex(v){return("0"+Math.round(v).toString(16)).slice(-2);}
   function interpHex(t){var r=c1[0]+(c2[0]-c1[0])*t,g=c1[1]+(c2[1]-c1[1])*t,b=c1[2]+(c2[2]-c1[2])*t;return"#"+toHex(r)+toHex(g)+toHex(b);}
   function hexToRgb(hex){return[parseInt(hex.slice(1,3),16),parseInt(hex.slice(3,5),16),parseInt(hex.slice(5,7),16)];}
   function findSliderT(r,g,b){var tr=(r-c1[0])/(c2[0]-c1[0]),tg=(c1[1]-g)/(c1[1]-c2[1]),tb=(c1[2]-b)/(c1[2]-c2[2]),eps=0.05;if(Math.abs(tr-tg)<eps&&Math.abs(tr-tb)<eps&&tr>=-eps&&tr<=1+eps)return Math.max(0,Math.min(1,(tr+tg+tb)/3));return null;}
-  function applyHex(hex){if(!overrideStyle){overrideStyle=document.createElement("style");overrideStyle.id="card-color-override";document.head.appendChild(overrideStyle);}overrideStyle.textContent=".vertical-video-view{background:"+hex+"!important}.dash-header-section{background-image:none!important;background-color:"+hex+"!important}.dash-header-section-menu{color:#fff!important}";swatch.value=hex;hexInput.value=hex.toUpperCase();}
-  function revert(){if(overrideStyle){overrideStyle.parentNode.removeChild(overrideStyle);overrideStyle=null;}swatch.value="#790DA2";hexInput.value="";slider.value=0;}
+  function linearize(c){c=c/255;return c<=0.04045?c/12.92:Math.pow((c+0.055)/1.055,2.4);}
+  function luminance(r,g,b){return 0.2126*linearize(r)+0.7152*linearize(g)+0.0722*linearize(b);}
+  function contrastWithWhite(r,g,b){var L=luminance(r,g,b);return(1.05)/(L+0.05);}
+  function updateWcag(hex){
+    var rgb=hexToRgb(hex);
+    var ratio=contrastWithWhite(rgb[0],rgb[1],rgb[2]);
+    var pass=ratio>=4.5;
+    wcagRatio.textContent=ratio.toFixed(2)+":1";
+    wcagLabel.textContent=pass?"AA ✓":"AA ✗";
+    wcagBadge.style.borderColor=pass?"rgba(100,255,150,0.7)":"rgba(255,100,100,0.7)";
+    wcagLabel.style.color=pass?"#7fff9a":"#ff8080";
+  }
+  function applyHex(hex){if(!overrideStyle){overrideStyle=document.createElement("style");overrideStyle.id="card-color-override";document.head.appendChild(overrideStyle);}overrideStyle.textContent=".vertical-video-view{background:"+hex+"!important}.dash-header-section{background-image:none!important;background-color:"+hex+"!important}.dash-header-section-menu{color:#fff!important}";swatch.value=hex;hexInput.value=hex.toUpperCase();updateWcag(hex);}
+  function revert(){if(overrideStyle){overrideStyle.parentNode.removeChild(overrideStyle);overrideStyle=null;}swatch.value="#790DA2";hexInput.value="";slider.value=0;updateWcag("#790DA2");}
   slider.addEventListener("input",function(){applyHex(interpHex(this.value/100));});
   swatch.addEventListener("input",function(){var rgb=hexToRgb(this.value),t=findSliderT(rgb[0],rgb[1],rgb[2]);if(t!==null)slider.value=Math.round(t*100);else slider.value=0;applyHex(this.value);});
   hexInput.addEventListener("keydown",function(e){if(e.key==="Enter"){var v=this.value.trim();if(!/^#/.test(v))v="#"+v;if(/^#[0-9a-fA-F]{6}$/.test(v)){var rgb=hexToRgb(v),t=findSliderT(rgb[0],rgb[1],rgb[2]);if(t!==null)slider.value=Math.round(t*100);applyHex(v);}}});
   revertBtn.addEventListener("click",revert);
+  updateWcag("#790DA2");
  })();
  </script>
  </div>
